@@ -38,6 +38,7 @@
 		"php": ">=5.6.20"
 	},
   "suggest": {
+    "php_modules/core": "",
     "php_modules/fs": "",
     "samils/callable-object": "",
     "samils/klass-props": ""
