@@ -31,6 +31,7 @@
  * SOFTWARE.
  */
 namespace Sammy\Packs\XSami {
+  use Sammy\Packs\Path;
   use function strtolower as lower;
   /**
    * Make sure the module base internal trait is not
@@ -65,6 +66,10 @@ namespace Sammy\Packs\XSami {
      */
     private static function dirMap ($dirMap) {
       $re = '/\/(\*){2,}$/';
+
+      $path = new Path;
+
+      $rootDir = $path->join ('~');
       /**
        * loop the directory list and get each
        * file that needs to be whatched
@@ -73,7 +78,7 @@ namespace Sammy\Packs\XSami {
         $mapSubDirs = preg_match ($re, $dirPath);
 
         $dirPath = realpath (join ('/', [
-          realpath (null),
+          $rootDir,
           preg_replace ($re, '', $dirPath)
         ]));
 
