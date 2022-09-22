@@ -77,7 +77,7 @@ namespace Sammy\Packs\XSami {
     /**
      * [Run description]
      */
-    public static final function Run () {
+    public static function Run () {
       $config = self::getConfig ();
 
       if ( !(is_array ($config) && $config) ) {
