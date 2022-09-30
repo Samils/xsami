@@ -95,12 +95,9 @@ namespace Sammy\Packs\XSami {
         return;
       }
 
-      $dir = join ('', [
-        preg_replace ('/(\\\|\/)+$/', '' , $dir),
-        DIRECTORY_SEPARATOR, '*'
-      ]);
+      $dir = preg_replace ('/(\\\|\/)+$/', '' , $dir);
 
-      $dirFiles = glob ($dir);
+      $dirFiles = self::readDir ($dir);
 
       if ( !(is_array ($dirFiles) && $dirFiles) ) {
         return;
