@@ -31,6 +31,7 @@
  * SOFTWARE.
  */
 namespace Sammy\Packs\XSami {
+  use Sammy\Packs\Path;
   use FileSystem\File;
   use php\module;
   /**
@@ -69,8 +70,10 @@ namespace Sammy\Packs\XSami {
         return null;
       }
 
+      $path = new Path;
+
       foreach ( $directories as $i => $directory ) {
-        if (!in_array ( path ($directory), self::$exclude)) {
+        if (!in_array ( $path->join ($directory), self::$exclude)) {
           self::watch ( $directory );
         }
       }
@@ -83,12 +86,14 @@ namespace Sammy\Packs\XSami {
      */
     private static function watch ($directory = '') {
       $ds = DIRECTORY_SEPARATOR;
+
+      $path = new Path;
       /**
        * [$dir description]
        * @var string
        */
       $dir = preg_replace ('/(\\\|\/)+/', $ds,
-        path ( $directory )
+        $path->join ( $directory )
       );
 
       if (in_array ( $directory, self::$exclude)) {
@@ -136,6 +141,10 @@ namespace Sammy\Packs\XSami {
       }
 
       self::handleFileWatchers ($file);
+
+      if (!is_file ($file->abs)) {
+        return;
+      }
 
       /**
        * [$commandStrSlices description]
