@@ -34,6 +34,9 @@ namespace Sammy\Packs\XSami {
   use Clinter\Console;
   use Sammy\Packs\Path;
   use Sammy\Packs\XSami;
+  use Sammy\Packs\Sami\CommandLineInterface\Options;
+  use Sammy\Packs\Sami\CommandLineInterface\Parameters;
+
   /**
    * Make sure the module base internal class is not
    * declared in the php global scope before creating
@@ -46,12 +49,14 @@ namespace Sammy\Packs\XSami {
     'name' => 'xsami',
     'description' => 'Xsami CLI',
 
-    'handler' => function () {
+    'handler' => function (Parameters $parameters, Options $options) {
       $xsami = new XSami;
 
       $app = $xsami ();
 
       $path = new Path;
+
+      $runOptions = $options->only (['watch']);
 
       $xsamiConfigFilePath = $path->join ('~', 'xsami.config.php');
 
@@ -61,7 +66,9 @@ namespace Sammy\Packs\XSami {
         $app->config ($xsamiConfig);
       }
 
-      Console::Error ('H');
+      $app->handler = $app->defaultAppHandler;
+
+      $xsami->runApp ($app, $runOptions);
     }
   ];
 }
