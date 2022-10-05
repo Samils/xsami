@@ -31,6 +31,9 @@
  * SOFTWARE.
  */
 namespace Sammy\Packs\XSami\Application {
+  use Closure;
+  use Sammy\Packs\XSami\Application;
+  use Sammy\Packs\Sami\CommandLineInterface;
   /**
    * Make sure the module base internal trait is not
    * declared in the php global scope defore creating
@@ -39,7 +42,7 @@ namespace Sammy\Packs\XSami\Application {
    * when trying to run the current command by the cli
    * API.
    */
-  if (!trait_exists('Sammy\Packs\XSami\Application\Base')){
+  if (!trait_exists ('Sammy\Packs\XSami\Application\Base')) {
   /**
    * @trait Base
    * Base internal trait for the
@@ -63,7 +66,33 @@ namespace Sammy\Packs\XSami\Application {
      * setter
      */
     public function __set (string $prop, $value = null) {
-      $this->props [strtolower ($prop)] = $value;
+      $propSetter = join ('', ['set', ucfirst ($prop)]);
+
+      if (method_exists ($this, $propSetter)) {
+        $this->props [strtolower ($prop)] = call_user_func_array ([$this, $propSetter], [$value]);
+      } else {
+        $this->props [strtolower ($prop)] = $value;
+      }
+    }
+
+    /**
+     * @method void
+     *
+     * handler setter
+     */
+    private function setHandler ($handler) {
+      if ($handler instanceof Closure) {
+        return $handler;
+      } elseif ($handler instanceof CommandLineInterface) {
+        $handlerApp = new Application;
+        $handlerApp->customHandler = $handler;
+
+        return Closure::bind (function ($args) {
+          if ($this->customHandler instanceof CommandLineInterface) {
+            $this->customHandler->runRaw ($args);
+          }
+        }, $handlerApp, get_class ($handlerApp));
+      }
     }
 
     /**
