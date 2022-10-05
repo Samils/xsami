@@ -57,5 +57,35 @@ namespace Sammy\Packs\XSami\Application {
    * -
    */
   trait Base {
+    /**
+     * @method void
+     *
+     * setter
+     */
+    public function __set (string $prop, $value = null) {
+      $this->props [strtolower ($prop)] = $value;
+    }
+
+    /**
+     * @method mixed
+     *
+     * getter
+     */
+    public function __get (string $prop) {
+      $prop = strtolower ($prop);
+
+      if (isset ($this->props [$prop])) {
+        return $this->props [$prop];
+      }
+    }
+
+    /**
+     * @method boolean
+     *
+     * isset
+     */
+    public function __isset (string $prop) {
+      return isset ($this->props [strtolower ($prop)]);
+    }
   }}
 }

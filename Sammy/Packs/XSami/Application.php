@@ -58,7 +58,6 @@ namespace Sammy\Packs\XSami {
    * -
    */
   class Application {
-    use KlassProps;
     use Application\Base;
 
     /**
@@ -69,6 +68,21 @@ namespace Sammy\Packs\XSami {
      * context.
      *
      */
-    private static $props = [];
+    private $props = [];
+
+    /**
+     * @method void
+     *
+     * config xsami Application object
+     */
+    public function config (array $configSet) {
+      if (!$configSet) {
+        return;
+      }
+
+      foreach ($configSet as $prop => $value) {
+        $this->__set ((string)$prop, $value);
+      }
+    }
   }}
 }
