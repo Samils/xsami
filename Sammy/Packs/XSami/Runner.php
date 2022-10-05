@@ -67,6 +67,13 @@ namespace Sammy\Packs\XSami {
     private static $defaultApp = null;
 
     /**
+     * @var boolean
+     *
+     * ?is xsami app running
+     */
+    private static $running = false;
+
+    /**
      * @var Sammy\Packs\XSami\Application $app
      *
      * XSami Application for handling map
@@ -77,7 +84,7 @@ namespace Sammy\Packs\XSami {
     /**
      * [Run description]
      */
-    public static function Run () {
+    public static function Run (Application $app = null, array $runOptions) {
       $config = self::getConfig ();
 
       if ( !(is_array ($config) && $config) ) {
@@ -139,16 +146,47 @@ namespace Sammy\Packs\XSami {
       }
 
       self::map ( $map, $exclude );
-      $i = 1;
 
+      self::start ();
       self::welcome ();
 
-      while ( $i++ ) {
+      while (self::running ()) {
         self::dirMap ($dirMap);
         self::watchAll ($dirs);
+
+        if (!(is_bool ($runOptions ['watch']) && $runOptions ['watch'])) {
+          self::stop ();
+        }
       }
 
       exit (0);
+    }
+
+    /**
+     * @method boolean
+     *
+     * verify if the xsami app is running
+     */
+    public static function running () {
+      return self::$running;
+    }
+
+    /**
+     * @method void
+     *
+     * stop the xsami application
+     */
+    private static function stop () {
+      self::$running = false;
+    }
+
+    /**
+     * @method void
+     *
+     * start the xsami application
+     */
+    private static function start () {
+      self::$running = !false;
     }
 
     /**
@@ -163,9 +201,9 @@ namespace Sammy\Packs\XSami {
      * The XSami Application for running with.
      *
      */
-    public function runApp (Application $app = null) {
+    public function runApp (Application $app = null, array $runOptions = []) {
       self::$app = $app;
-      self::Run ($app);
+      self::Run ($app, $runOptions);
     }
   }}
 }
