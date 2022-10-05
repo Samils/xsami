@@ -125,6 +125,10 @@ namespace Sammy\Packs\XSami {
         }
       }
 
+      $defaultRunOptions = ['watch' => true];
+
+      $runOptions = array_merge ($defaultRunOptions, $runOptions);
+
       # print_r (self::$fileWatcherMap);
       # $data = (array)('Le');
 
