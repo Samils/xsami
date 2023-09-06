@@ -66,13 +66,18 @@ namespace Sammy\Packs\XSami {
     private static function map ($map, $exclude) {
       self::registerMap ($map);
 
+      $path = requires ('path');
+
       if (is_array ($exclude) && $exclude) {
         /**
          * Exclude each directory in the array
          * in order avoiding XSami to watch it
          */
         foreach ($exclude as $i => $dir) {
-          array_push (self::$exclude, realpath (path ($dir)));
+
+          $excludeFileAbsolutePath = $path->resolve ($dir);
+
+          array_push (self::$exclude, realpath ($excludeFileAbsolutePath));
         }
       }
     }
